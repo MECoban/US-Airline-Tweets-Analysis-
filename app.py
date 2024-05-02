@@ -3,15 +3,14 @@ import pandas as pd
 import numpy as np
 
 st.title('My Data Analysis App')
-
+st.sidebar.title()
 st.markdown('## Upload a dataset and analyze it!')
+st.sidebar.markdown()
 
-uploaded_file = st.file_uploader("Choose a file", type=['csv', 'xlsx'])
-if uploaded_file is not None:
-    if uploaded_file.name.endswith('.csv'):
-        df = pd.read_csv(uploaded_file)
-    else:
-        df = pd.read_excel(uploaded_file)
+@st.cache(persist=True) # Cache decorator the data so it doesn't have to be loaded every time the app is run
+def load_data():
+    data = pd.read_csv('Tweets.csv')
+    data["tweet_created"] = pd.to_datetime(data["tweet_created"])
+    return data
 
-    st.write(df.describe())
-
+data = load_data()
